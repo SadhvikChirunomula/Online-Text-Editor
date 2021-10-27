@@ -26,13 +26,14 @@ public class TextEditor {
     @ApiOperation(value = "Save File")
     @RequestMapping(method = RequestMethod.POST, value = "/saveFile")
     public String saveFile(@RequestBody SaveFileRequest saveFileRequest) throws Exception {
-        File directoryPath = new File("F:\\Java\\OnlineTextEditor\\src\\main\\resources\\files");
+        File directoryPath = new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files");
         System.out.println("Content in file is " + saveFileRequest.getFileContent());
+        System.out.println();
 
         if (saveFileRequest.getFileName().equals("")) {
-            FileUtils.writeStringToFile(new File("F:\\Java\\OnlineTextEditor\\src\\main\\resources\\files\\test" + directoryPath.list().length + ".txt"), saveFileRequest.getFileContent());
+            FileUtils.writeStringToFile(new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files"+File.separator+"test" + directoryPath.list().length + ".txt"), saveFileRequest.getFileContent());
         } else {
-            FileUtils.writeStringToFile(new File("F:\\Java\\OnlineTextEditor\\src\\main\\resources\\files\\" + saveFileRequest.getFileName()), saveFileRequest.getFileContent());
+            FileUtils.writeStringToFile(new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files"+File.separator+"" + saveFileRequest.getFileName()), saveFileRequest.getFileContent());
 
         }
         //List of all files and directories
@@ -43,7 +44,8 @@ public class TextEditor {
     @RequestMapping(method = RequestMethod.GET, value = "/getFiles")
     public List<String> getFilesList() throws Exception {
         ArrayList<String> a = new ArrayList<>();
-        File directoryPath = new File("F:\\Java\\OnlineTextEditor\\src\\main\\resources\\files");
+        System.out.println("Searching for files in directory: "+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"files");
+        File directoryPath = new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files");
         //List of all files and directories
         String contents[] = directoryPath.list();
         System.out.println("List of files and directories in the specified directory:");
@@ -55,8 +57,8 @@ public class TextEditor {
 
     @RequestMapping(method = RequestMethod.POST, value = "/getFileContent")
     public String getFileContent(@RequestBody String fileName) throws Exception {
-        String fileContent = FileUtils.readFileToString(new File("F:\\Java\\OnlineTextEditor\\src\\main\\resources\\files\\" + fileName));
-        System.out.println("Content in file " + fileName + ": \n" + fileContent);
+        String fileContent = FileUtils.readFileToString(new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files"+File.separator+"" + fileName));
+        System.out.println("Content in file " + fileName + ": "+File.separator+"n" + fileContent);
         return fileContent;
     }
 }
