@@ -1,6 +1,11 @@
 package com.epsilon.OnlineTextEditor.controllers;
 
+import com.epsilon.OnlineTextEditor.models.TextEditor.GetFilesRequest;
+import com.epsilon.OnlineTextEditor.models.TextEditor.LoginUserRequest;
+import com.epsilon.OnlineTextEditor.models.TextEditor.RegisterUserRequest;
 import com.epsilon.OnlineTextEditor.models.TextEditor.SaveFileRequest;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.FileUtils;
@@ -13,6 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Api(value = "Text Editor", description = "API's related to Text Editor")
@@ -26,26 +32,28 @@ public class TextEditor {
     @ApiOperation(value = "Save File")
     @RequestMapping(method = RequestMethod.POST, value = "/saveFile")
     public String saveFile(@RequestBody SaveFileRequest saveFileRequest) throws Exception {
-        File directoryPath = new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files");
+        System.out.println("Request from user: " + saveFileRequest.getUserName());
+        File directoryPath = new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + saveFileRequest.getUserName());
         System.out.println("Content in file is " + saveFileRequest.getFileContent());
-        System.out.println();
+
+        if (!directoryPath.exists()) {
+            directoryPath.mkdir();
+        }
 
         if (saveFileRequest.getFileName().equals("")) {
-            FileUtils.writeStringToFile(new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files"+File.separator+"test" + directoryPath.list().length + ".txt"), saveFileRequest.getFileContent());
+            FileUtils.writeStringToFile(new File(directoryPath + File.separator + "test" + directoryPath.list().length + ".txt"), saveFileRequest.getFileContent());
         } else {
-            FileUtils.writeStringToFile(new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files"+File.separator+"" + saveFileRequest.getFileName()), saveFileRequest.getFileContent());
+            FileUtils.writeStringToFile(new File(directoryPath + File.separator + saveFileRequest.getFileName()), saveFileRequest.getFileContent());
 
         }
-        //List of all files and directories
-        System.out.println("Content in file is " + saveFileRequest.getFileContent() + "to test" + directoryPath.list().length);
         return "Success";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getFiles")
-    public List<String> getFilesList() throws Exception {
+    @RequestMapping(method = RequestMethod.POST, value = "/getFiles")
+    public List<String> getFilesList(@RequestBody GetFilesRequest getFilesRequest) throws Exception {
         ArrayList<String> a = new ArrayList<>();
-        System.out.println("Searching for files in directory: "+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"files");
-        File directoryPath = new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files");
+        System.out.println("Searching for files in directory: " + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + getFilesRequest.getUserName());
+        File directoryPath = new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + getFilesRequest.getUserName());
         //List of all files and directories
         String contents[] = directoryPath.list();
         System.out.println("List of files and directories in the specified directory:");
@@ -57,8 +65,71 @@ public class TextEditor {
 
     @RequestMapping(method = RequestMethod.POST, value = "/getFileContent")
     public String getFileContent(@RequestBody String fileName) throws Exception {
-        String fileContent = FileUtils.readFileToString(new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"files"+File.separator+"" + fileName));
-        System.out.println("Content in file " + fileName + ": "+File.separator+"n" + fileContent);
+        String fileContent = FileUtils.readFileToString(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + "" + fileName));
+        System.out.println("Content in file " + fileName + ": " + File.separator + "n" + fileContent);
         return fileContent;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/registerUser")
+    public String registerUser(@RequestBody RegisterUserRequest registerUserRequest) throws Exception {
+        String usersList = FileUtils.readFileToString(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "users.json"));
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, Object>> data = mapper.readValue(usersList, new TypeReference<List<Map<String, Object>>>() {
+        });
+        boolean userExists = false;
+
+        for (Map<String, Object> datum : data) {
+            if (datum.get("username").equals(registerUserRequest.getUserName())) {
+                userExists = true;
+            }
+        }
+
+        if (userExists) {
+            return "Already Exists";
+        } else {
+            data.add(registerUserRequest.toJson());
+            System.out.println("Adding users : " + mapper.writeValueAsString(data));
+            FileUtils.writeStringToFile(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "users.json"), mapper.writeValueAsString(data));
+
+            // Create directory for User
+            File directoryPath = new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + registerUserRequest.getUserName());
+            if (!directoryPath.exists()) {
+                directoryPath.mkdir();
+            }
+            FileUtils.writeStringToFile(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + registerUserRequest.getUserName() + File.separator + "samplefile.txt"), "Hello, Thankyou");
+
+
+            return "Added User Successfully";
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/loginUser")
+    public String loginUser(@RequestBody LoginUserRequest loginUserRequest) throws Exception {
+        String usersList = FileUtils.readFileToString(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "users.json"));
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, Object>> data = mapper.readValue(usersList, new TypeReference<List<Map<String, Object>>>() {
+        });
+        boolean userExists = false;
+        boolean isAuth = false;
+
+
+        for (Map<String, Object> datum : data) {
+            if (datum.get("username").equals(loginUserRequest.getUserName())) {
+                userExists = true;
+                if (datum.get("password").equals(loginUserRequest.getPassword())) {
+                    isAuth = true;
+                }
+            }
+        }
+
+        if (isAuth) {
+            return "Success";
+        } else {
+            if (userExists) {
+                return "Authentication Error";
+            } else {
+                return "User Not Found, Please register";
+            }
+        }
     }
 }

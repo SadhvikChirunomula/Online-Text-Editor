@@ -4,10 +4,40 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <div id="header">
-    <h2>Online Text Editor</h2>
+    <h1>Online Text Editor</h1>
 </div>
 
 <section class="container-left">
+    <div class="tools">
+        <button onclick="getFilesList(this)" class="files-list"><i class="fa fa-files-o" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tools">
+        <table id="login-table">
+            <tr>
+                <td>Username: </td>
+            </tr>
+            <tr>
+                <td><textarea id="username-textarea"></textarea></td>
+            </tr>
+            <tr>
+                <td>Password: </td>
+            </tr>
+            <tr>
+                <td><textarea id="password-textarea"></textarea></td>
+            </tr>
+            <tr>
+                <td id="login-button"><button onclick="loginUser(this)">Login</button></td>
+            </tr>
+            <tr>
+                <td id="register-button"><button onclick="registerUser(this)">Register</button></td>
+            </tr>
+        </table>
+    </div>
+
+</section>
+
+<section class="container-middle">
     <div class="tools">
         <button onclick="getFilesList(this)" class="files-list"><i class="fa fa-files-o" aria-hidden="true"></i>
         </button>
