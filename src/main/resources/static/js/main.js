@@ -214,14 +214,15 @@ async function getFilesList() {
 
 async function getFileContent(fileName){
     var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "text/plain");
+    myHeaders.append("Content-Type", "application/json");
+    var raw = JSON.stringify({"fileName":fileName,"userName":userName});
     fileContent = ""
     fileSelected = fileName
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
       redirect: 'follow',
-      body: fileName
+      body: raw
     };
 
     const response = await fetch("http://localhost:8080/getFileContent", requestOptions)

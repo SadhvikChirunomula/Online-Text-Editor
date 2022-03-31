@@ -1,9 +1,6 @@
 package com.epsilon.OnlineTextEditor.controllers;
 
-import com.epsilon.OnlineTextEditor.models.TextEditor.GetFilesRequest;
-import com.epsilon.OnlineTextEditor.models.TextEditor.LoginUserRequest;
-import com.epsilon.OnlineTextEditor.models.TextEditor.RegisterUserRequest;
-import com.epsilon.OnlineTextEditor.models.TextEditor.SaveFileRequest;
+import com.epsilon.OnlineTextEditor.models.TextEditor.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -64,9 +61,12 @@ public class TextEditor {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/getFileContent")
-    public String getFileContent(@RequestBody String fileName) throws Exception {
-        String fileContent = FileUtils.readFileToString(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + "" + fileName));
-        System.out.println("Content in file " + fileName + ": " + File.separator + "n" + fileContent);
+    public String getFileContent(@RequestBody GetFilesContent getFilesContent) throws Exception {
+        System.out.println("Trying to get file content");
+        String fileContent = FileUtils.readFileToString(new File("src" + File.separator + "main" + File.separator + "resources" + File.separator + "files" + File.separator + getFilesContent.getUserName() + File.separator + getFilesContent.getFileName()));
+        System.out.println("Reading content");
+
+        System.out.println("Content in file " + getFilesContent.getFileName() + ": " + File.separator + "main" + fileContent);
         return fileContent;
     }
 
