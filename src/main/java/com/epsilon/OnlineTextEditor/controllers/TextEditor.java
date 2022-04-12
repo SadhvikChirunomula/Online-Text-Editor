@@ -1,6 +1,6 @@
 package com.epsilon.OnlineTextEditor.controllers;
 
-import com.epsilon.OnlineTextEditor.models.TextEditor.*;
+import com.epsilon.OnlineTextEditor.models.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;

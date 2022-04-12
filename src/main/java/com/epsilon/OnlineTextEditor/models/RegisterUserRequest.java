@@ -1,4 +1,4 @@
-package com.epsilon.OnlineTextEditor.models.TextEditor;
+package com.epsilon.OnlineTextEditor.models;
 
 import java.util.HashMap;
 

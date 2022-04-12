@@ -1,0 +1,23 @@
+12/04
+
+DB related:
+1. Install pgAdmin and postgres
+2. Create DB, schemas and tables
+
+Front-End (html & Js)
+1. User Input Validatation
+2. Timestamp session managemment
+3. Page redirection
+4. Commenting wherever required
+5. Add button for sharing
+6. Create alerts wherever required
+
+Security:
+1. Basic Auth - Username, Password
+2. Password and Data Encryption
+3. Injection Prevention
+4. File share logic
+
+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
+---------------------------------------------
+
