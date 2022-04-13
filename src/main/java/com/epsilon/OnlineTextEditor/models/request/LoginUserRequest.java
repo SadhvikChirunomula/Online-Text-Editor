@@ -1,4 +1,4 @@
-package com.epsilon.OnlineTextEditor.models;
+package com.epsilon.OnlineTextEditor.models.request;
 
 public class LoginUserRequest {
     String userName;

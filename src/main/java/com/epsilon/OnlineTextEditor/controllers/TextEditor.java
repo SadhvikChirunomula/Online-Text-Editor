@@ -1,6 +1,9 @@
 package com.epsilon.OnlineTextEditor.controllers;
 
 import com.epsilon.OnlineTextEditor.models.*;
+import com.epsilon.OnlineTextEditor.models.request.LoginUserRequest;
+import com.epsilon.OnlineTextEditor.models.request.RegisterUserRequest;
+import com.epsilon.OnlineTextEditor.models.request.SaveFileRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;

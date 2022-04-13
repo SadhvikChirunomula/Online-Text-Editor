@@ -1,13 +1,13 @@
 drop database if exists ote;
 create database ote;
 
-drop schema if exists users;
-drop schema if exists files;
+drop schema if exists users cascade;
+drop schema if exists files cascade;
 create schema if not exists users;
 create schema if not exists files;
 
 create table users.register (
-    user_id int,
+    user_id serial,
     user_name text,
     password text,
     user_email text,
@@ -15,7 +15,7 @@ create table users.register (
     crt_by text,
     mod_ts timestamp,
     mod_by text
-)
+);
 
 create table users.login_sessions (
     user_id int,
@@ -26,17 +26,17 @@ create table users.login_sessions (
     crt_by text,
     mod_ts timestamp,
     mod_by text
-)
+);
 
 create table files.file_data (
-    file_id int,
+    file_id serial,
     file_name text,
     file_data text,
     crt_ts timestamp,
     crt_by text,
     mod_ts timestamp,
     mod_by text
-)
+);
 
 create table files.user_file_lineage (
     user_id int,
@@ -46,4 +46,4 @@ create table files.user_file_lineage (
     crt_by text,
     mod_ts timestamp,
     mod_by text
-)
+);

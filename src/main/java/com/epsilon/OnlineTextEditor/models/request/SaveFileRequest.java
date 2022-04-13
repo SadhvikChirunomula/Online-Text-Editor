@@ -1,9 +1,18 @@
-package com.epsilon.OnlineTextEditor.models;
+package com.epsilon.OnlineTextEditor.models.request;
 
 public class SaveFileRequest {
     String fileContent;
     String fileName;
     String userName;
+    int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;

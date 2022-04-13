@@ -1,10 +1,19 @@
-package com.epsilon.OnlineTextEditor.models;
+package com.epsilon.OnlineTextEditor.models.request;
 
 import java.util.HashMap;
 
 public class RegisterUserRequest {
     String userName;
     String password;
+    String userEmail;
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
 
     public String getUserName() {
         return userName;

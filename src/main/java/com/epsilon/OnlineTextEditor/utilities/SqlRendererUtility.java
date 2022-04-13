@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 public class SqlRendererUtility {
-    DBConnectionManager dbConnectionManager = new DBConnectionManager();
+    static DBConnectionManager dbConnectionManager = new DBConnectionManager();
 
-    public List<Map<String, Object>> runSelectQuery(String sql) {
+    public static List<Map<String, Object>> runSelectQuery(String sql) {
         try {
             Connection connection = dbConnectionManager.getConnection();
+            System.out.println("Running select query : " + sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             connection.close();
             return resultSetToListOfMap(rs);
@@ -24,7 +25,7 @@ public class SqlRendererUtility {
         return null;
     }
 
-    public Map<String, List<String>> runSelectQueryReturnMapOfList(String sql) {
+    public static Map<String, List<String>> runSelectQueryReturnMapOfList(String sql) {
         try {
             Connection connection = dbConnectionManager.getConnection();
             ResultSet rs = connection.createStatement().executeQuery(sql);
@@ -36,7 +37,7 @@ public class SqlRendererUtility {
         return null;
     }
 
-    private List<Map<String, Object>> resultSetToListOfMap(ResultSet rs) throws SQLException {
+    private static List<Map<String, Object>> resultSetToListOfMap(ResultSet rs) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
         List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
@@ -50,9 +51,10 @@ public class SqlRendererUtility {
         return rows;
     }
 
-    public void runInsertQuery(String sql) {
+    public static void runInsertQuery(String sql) {
         try {
             Connection connection = dbConnectionManager.getConnection();
+            System.out.println("Running insert query : " + sql);
             connection.createStatement().executeUpdate(sql);
             connection.close();
         } catch (Exception e) {
@@ -60,7 +62,7 @@ public class SqlRendererUtility {
         }
     }
 
-    private Map<String, List<String>> resultSetToList(ResultSet rs) throws SQLException {
+    private static Map<String, List<String>> resultSetToList(ResultSet rs) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
         Map<String, List<String>> rowlist = new HashMap<>();
