@@ -7,6 +7,7 @@ import com.epsilon.OnlineTextEditor.models.response.SaveFileResponse;
 import com.epsilon.OnlineTextEditor.models.response.ShareFileResponse;
 import com.epsilon.OnlineTextEditor.utilities.SqlRendererUtility;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,12 +43,12 @@ public class FilesService {
         return SqlRendererUtility.runSelectQuery(FilesDao.listFilesOfUser(userId));
     }
 
-    public static List<Map<String, Object>> getFileContent(int userId, int fileId) {
-        return SqlRendererUtility.runSelectQuery(FilesDao.getFileContent(userId, fileId));
+    public static Map<String, Object> getFileContent(int userId, int fileId) {
+        return SqlRendererUtility.runSelectQuery(FilesDao.getFileContent(userId, fileId)).size() > 0 ? SqlRendererUtility.runSelectQuery(FilesDao.getFileContent(userId, fileId)).get(0) : new HashMap<String, Object>();
     }
 
-    public static List<Map<String, Object>> getFileContent(int userId, String fileName) {
-        return SqlRendererUtility.runSelectQuery(FilesDao.getFileContent(userId, fileName));
+    public static Map<String, Object> getFileContent(int userId, String fileName) {
+        return SqlRendererUtility.runSelectQuery(FilesDao.getFileContent(userId, fileName)).size() > 0 ? SqlRendererUtility.runSelectQuery(FilesDao.getFileContent(userId, fileName)).get(0) : new HashMap<String, Object>();
     }
 
     public static ShareFileResponse shareFile(ShareFileRequest shareFileRequest) {

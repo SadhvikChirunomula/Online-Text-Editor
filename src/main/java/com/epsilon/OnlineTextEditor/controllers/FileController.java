@@ -28,12 +28,12 @@ public class FileController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/file/content/id")
-    public List<Map<String, Object>> getFileContentUsingId(@RequestParam int userId, int fileId) throws Exception {
+    public Map<String, Object> getFileContentUsingId(@RequestParam int userId, int fileId) throws Exception {
         return FilesService.getFileContent(userId, fileId);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/file/content/name")
-    public List<Map<String, Object>> getFileContentUsingName(@RequestParam int userId, String fileName) throws Exception {
+    public Map<String, Object> getFileContentUsingName(@RequestParam int userId, String fileName) throws Exception {
         return FilesService.getFileContent(userId, fileName);
     }
 

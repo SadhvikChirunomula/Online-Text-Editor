@@ -1,7 +1,7 @@
 let defaultFontSize= 16;
 const placeholder = document.querySelector('.placeholder');
 let fileSelected = "";
-
+var userId = 0;
 
 window.onload=function(){
 let defaultFontSize = 16;
@@ -138,10 +138,15 @@ const SaveFile = function () {
     console.log(filetext)
     console.log("Selected File: "+fileSelected)
 
+    if(fileSelected==""){
+    fileSelected="new_"+Math.floor(1000 + Math.random() * 9000)+".txt";
+    }
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({"fileContent":filetext,"fileName":fileSelected, "userName":userName});
+    var raw = JSON.stringify({  "fileContent": filetext ,  "fileName": fileSelected,  "userId": userId,  "userName": userName});
+
     console.log("Sending : "+raw)
 
     var requestOptions = {
@@ -151,15 +156,16 @@ const SaveFile = function () {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:8080/saveFile", requestOptions)
+    fetch("http://localhost:8080/file/save", requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
 
     alert("File Saved Successfully")
+//        const parsedResponse=JSON.parse(fileContent)
+
     document.getElementById("files-list").innerHTML = ""
     getFilesList()
-
 }
 
 function newFile(){
@@ -169,39 +175,34 @@ document.getElementById("text").value=""
 
 async function getFilesList() {
     userName =  document.getElementById("username-textarea").value;
-    console.log("Fetching files of User: "+userName)
+    console.log("Fetching files of User: "+userName+ "with userId"+ userId)
     document.getElementById("files-list").innerHTML = ""
     var filesArray = []
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({"userName":userName});
-
     var requestOptions = {
-      method: 'POST',
+      method: 'GET',
       headers: myHeaders,
-      body: raw,
       redirect: 'follow'
     };
 
-    const response = await fetch("http://localhost:8080/getFiles", requestOptions)
+    const response = await fetch("http://localhost:8080/list/files?userId="+userId, requestOptions)
       .then(response => response.json())
       .then(result => filesArray = result)
       .catch(error => console.log('error', error));
       console.log(response);
 
-//    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
-
     console.log("Files Array: "+filesArray)
     filesArray.forEach(async function(item) {
         var fileContent = ""
         let button = document.createElement("button");
-        button.innerText = item
-        button.name = item
+        button.innerText = item.file_name
+        button.name = item.file_name
         button.id = "file-button"
         button.onclick = async function () {
-            console.log("Pressed File: "+item)
+            console.log("Pressed File: "+item.file_name)
             getFileContent(item)
         };
 
@@ -212,26 +213,29 @@ async function getFilesList() {
     });
 }
 
-async function getFileContent(fileName){
+async function getFileContent(item){
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    var raw = JSON.stringify({"fileName":fileName,"userName":userName});
+//    var raw = JSON.stringify({"fileId":fileId,"userId":userId});
     fileContent = ""
-    fileSelected = fileName
+    fileSelected = item.file_name
     var requestOptions = {
-      method: 'POST',
+      method: 'GET',
       headers: myHeaders,
       redirect: 'follow',
-      body: raw
+//      body: raw
     };
 
-    const response = await fetch("http://localhost:8080/getFileContent", requestOptions)
+    const response = await fetch("http://localhost:8080/file/content/id?fileId="+item.file_id+"&userId="+userId, requestOptions)
       .then(response => response.text())
       .then(result => fileContent = result)
       .catch(error => console.log('error', error));
 
-    console.log("Content in file: "+fileContent);
-    document.getElementById("text").value=fileContent;
+    const parsedResponse=JSON.parse(fileContent)
+
+    console.log("Response of getFileContent : "+parsedResponse)
+    console.log("Content in file: "+parsedResponse.file_data);
+    document.getElementById("text").value=parsedResponse.file_data;
 }
 
 
@@ -244,7 +248,7 @@ async function registerUser(){
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({"userName":userName,"password":password});
+    var raw = JSON.stringify({"userName":userName,"password":password,  "userEmail": "string"});
 
     var requestOptions = {
       method: 'POST',
@@ -253,18 +257,19 @@ async function registerUser(){
       redirect: 'follow'
     };
 
-    const response = await fetch("http://localhost:8080/registerUser", requestOptions)
+    const response = await fetch("http://localhost:8080/user/register", requestOptions)
       .then(response => response.text())
       .then(result => registerUserResponse = result)
       .catch(error => console.log('error', error));
+    const parsedResponse=JSON.parse(registerUserResponse)
 
-    console.log("Response of Registering User :"+registerUserResponse)
+    console.log("Response of Registering User :"+JSON.parse(registerUserResponse).statusMessage)
 
-    if (registerUserResponse=="Already Exists"){
-        alert("User Already Exists, try registering with differenet username")
-        refreshUserDetails()
-    }else if(registerUserResponse=="Added User Successfully"){
+    if (parsedResponse.statusMessage=="Added user successfully"){
         alert("Registration Successful, Please login to continue")
+        refreshUserDetails()
+    }else if(parsedResponse.statusMessage=="User Already Exists"){
+        alert("User Already Exists, try registering with different username")
         refreshUserDetails()
     }
 }
@@ -287,20 +292,22 @@ async function loginUser(){
       redirect: 'follow'
     };
 
-    const response = await fetch("http://localhost:8080/loginUser", requestOptions)
+    const response = await fetch("http://localhost:8080/user/login", requestOptions)
       .then(response => response.text())
       .then(result => loginUserResponse = result)
       .catch(error => console.log('error', error));
 
-    console.log("Response of Login User :"+loginUserResponse)
+    console.log("Response of Login User :"+JSON.parse(loginUserResponse))
+    const parsedResponse=JSON.parse(loginUserResponse)
 
-    if (loginUserResponse=="User Not Found, Please register"){
-        alert("Please register to continue")
+    if (parsedResponse.statusMessage=="User Not found"){
+        alert("User not found, Please register to continue")
         refreshUserDetails()
-    }else if(loginUserResponse=="Success"){
+    }else if(parsedResponse.statusMessage=="Auth Success"){
         alert("Logged in Successfully")
+        userId=parsedResponse.userId
         getFilesList()
-    }else if(loginUserResponse=="Authentication Error"){
+    }else if(parsedResponse.statusMessage=="Wrong Password"){
         alert("Authentication Error")
         refreshUserDetails()
     }

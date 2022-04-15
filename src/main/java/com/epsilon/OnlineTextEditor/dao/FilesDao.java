@@ -34,7 +34,7 @@ public class FilesDao {
     }
 
     public static String getFileContent(int userId, int fileId) {
-        return "select * from files.user_file_lineage fl inner join files.file_data fd on fl.file_id = fd.file_id and fl.user_id = \'" + userId + "\' and fd.file_id=\'" + fileId + "\'";
+        return "select fl.user_id, fd.file_id, fd.file_name, fd.crt_ts, fd.crt_by, fd.mod_ts, fd.mod_by, convert_from(decode(fd.file_data, 'base64'), 'UTF8') as file_data from files.user_file_lineage fl inner join files.file_data fd on fl.file_id = fd.file_id and fl.user_id = \'" + userId + "\' and fd.file_id=\'" + fileId + "\'";
     }
 
     public static String getFileContent(int userId, String fileName) {
