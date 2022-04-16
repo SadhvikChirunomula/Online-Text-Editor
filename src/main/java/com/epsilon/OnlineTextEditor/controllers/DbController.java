@@ -23,7 +23,7 @@ public class DbController {
         }
     }
 
-    @ApiOperation(value = "Test DB Connection")
+    @ApiOperation(value = "Test Database Connection")
     @RequestMapping(method = RequestMethod.GET, value = "/db/initialize")
     public String initializeDb() throws Exception {
         SqlRendererUtility.runInsertQuery(
