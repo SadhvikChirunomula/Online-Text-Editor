@@ -267,7 +267,8 @@ async function registerUser(){
 
     if (parsedResponse.statusMessage=="Added user successfully"){
         alert("Registration Successful, Please login to continue")
-        refreshUserDetails()
+        refreshUserDetailsRegPage()
+        window.location.assign("http://www.localhost:8080/home.html")
     }else if(parsedResponse.statusMessage=="User Already Exists"){
         alert("User Already Exists, try registering with different username")
         refreshUserDetails()
@@ -317,4 +318,9 @@ function refreshUserDetails(){
     document.getElementById("username-textarea").value=""
     document.getElementById("password-textarea").value=""
     document.getElementById("files-list").innerHTML = ""
+}
+
+function refreshUserDetailsRegPage(){
+    document.getElementById("username-textarea").value=""
+    document.getElementById("password-textarea").value=""
 }

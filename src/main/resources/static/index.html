@@ -9,11 +9,13 @@
 
 <section class="container-left">
     <div class="tools">
-        <button onclick="getFilesList(this)" class="files-list"><i class="fa fa-files-o" aria-hidden="true"></i>
-        </button>
-    </div>
-    <div class="tools">
+        <br>
+        <br>
         <table id="login-table">
+            <tr>
+                <td><a href="http://localhost:8080/login.html"> Already a User? Click here to login </a> </td>
+            </tr>
+
             <tr>
                 <td>Username: </td>
             </tr>
@@ -27,56 +29,10 @@
                 <td><textarea id="password-textarea"></textarea></td>
             </tr>
             <tr>
-                <td id="login-button"><button onclick="loginUser(this)">Login</button></td>
-            </tr>
-            <tr>
                 <td id="register-button"><button onclick="registerUser(this)">Register</button></td>
             </tr>
         </table>
     </div>
 
-</section>
-
-<section class="container-middle">
-    <div class="tools">
-        <button onclick="getFilesList(this)" class="files-list"><i class="fa fa-files-o" aria-hidden="true"></i>
-        </button>
-        <button onclick="newFile(this)" class="files-list"><i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-    </div>
-    <div class="tools">
-        <ul id="files-list"></ul>
-    </div>
-
-</section>
-
-<section class="container">
-    <div class="tools">
-        <input type="color" id="color" onchange="color(this.value)">
-        <label class="color-pallete" for="color">
-            <i class="fa fa-paint-brush" aria-hidden="true"></i>
-        </label>
-        <button onclick="SmallFont(this)" class="mines size"><i class="fa fa-minus-circle" aria-hidden="true"></i>
-        </button>
-        <button onclick="Biggerfont(this)" class="plus size"><i class="fa fa-plus-circle" aria-hidden="true"></i>
-        </button>
-        <button onclick="BoldFont(this)" class="bold"><i class="fa fa-bold" aria-hidden="true"></i>
-        </button>
-        <button onclick="ItalicFont(this)" class="italic"><i class="fa fa-italic" aria-hidden="true"></i>
-        </button>
-        <button onclick="TextLeft(this)" class="left"><i class="fa fa-align-left" aria-hidden="true"></i>
-        </button>
-        <button onclick="TextCenter(this)" class="center"><i class="fa fa-align-center" aria-hidden="true"></i>
-        </button>
-        <button onclick="TextRight(this)" class="right"><i class="fa fa-align-right" aria-hidden="true"></i>
-        </button>
-        <button onclick="SaveFile(this)" class="save"><i class="fa fa-floppy-o" aria-hidden="true"></i>
-        </button>
-
-    </div>
-    <div class="form-control">
-        <textarea spellcheck="false" required="required" name="text" id="text"></textarea>
-        <p class="placeholder"></p>
-    </div>
 </section>
 
